@@ -4,7 +4,7 @@ import pandas as pd
 import plotnine as p9
 from statsmodels.tsa.seasonal import STL
 
-# Dados
+# Data
 dados = (
     pd.read_csv("dados_tratados.csv", converters = {"Date": pd.to_datetime})
     .assign(indice = lambda x: x.Date)
