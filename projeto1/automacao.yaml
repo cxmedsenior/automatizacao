@@ -42,7 +42,7 @@ jobs:
       - name: Publicar dashboard no shinyapps.io
         run: |
           poetry run rsconnect add --account '${{ env.USER }}' --name '${{ env.USER }}' --token '${{ env.TOKEN }}' --secret '${{ env.SECRET }}'
-          poetry run rsconnect deploy shiny projeto1 --title projeto1 --new
+          poetry run rsconnect deploy shiny projeto1 --title projeto1 --new --python 3.10
 
       - name: Commit & Push
         uses: stefanzweifel/git-auto-commit-action@v4
