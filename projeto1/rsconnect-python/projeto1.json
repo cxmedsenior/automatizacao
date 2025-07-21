@@ -1,0 +1,12 @@
+{
+    "https://api.shinyapps.io": {
+        "server_url": "https://api.shinyapps.io",
+        "filename": "/home/runner/work/automatizacao/automatizacao/projeto1",
+        "app_url": "https://cx-medsenior.shinyapps.io/projeto1/",
+        "app_id": "15101650",
+        "app_guid": null,
+        "title": "projeto1",
+        "app_mode": "python-shiny",
+        "app_store_version": 1
+    }
+}
