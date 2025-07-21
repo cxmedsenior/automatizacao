@@ -32,6 +32,7 @@ jobs:
       - name: Configurar Poetry para ambiente local e instalar dependências
         run: |
           poetry config virtualenvs.in-project true
+          poetry lock                            
           poetry install --no-root
 
       - name: Rodar ETL
