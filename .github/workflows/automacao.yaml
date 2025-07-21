@@ -19,25 +19,26 @@ jobs:
       - name: Clonar o repositório
         uses: actions/checkout@v3
 
-      - name: Instalar o Python
+      - name: Instalar o Python (compatível com shinyapps.io)
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13.4'
+          python-version: '3.10'
 
-      - name: Install Poetry
+      - name: Instalar o Poetry
         uses: snok/install-poetry@v1
         with:
           version: 2.1.2
 
-      - name: Instalar bibliotecas de Python
-        run: poetry install --no-root
-
-      - name: Atualizar dados
+      - name: Configurar Poetry para ambiente local e instalar dependências
         run: |
           poetry config virtualenvs.in-project true
+          poetry install --no-root
+
+      - name: Rodar ETL
+        run: |
           poetry run python projeto1/Python/etl.py
 
-      - name: Publicar dashboard
+      - name: Publicar dashboard no shinyapps.io
         run: |
           poetry run rsconnect add --account '${{ env.USER }}' --name '${{ env.USER }}' --token '${{ env.TOKEN }}' --secret '${{ env.SECRET }}'
           poetry run rsconnect deploy shiny projeto1 --title projeto1
