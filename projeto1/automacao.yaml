@@ -29,21 +29,24 @@ jobs:
         with:
           version: 2.1.2
 
-      - name: Configurar Poetry para ambiente local e instalar dependências
+      - name: Configurar Poetry e instalar dependências
         run: |
           poetry config virtualenvs.in-project true
-          poetry lock                            # 👈 ESTA LINHA FOI ADICIONADA
           poetry install --no-root
 
       - name: Rodar ETL
         run: |
           poetry run python projeto1/Python/etl.py
 
+      - name: Remover cache de deploy anterior
+        run: |
+          rm -rf .rsconnect-python
+          rm -f projeto1/projeto1.json
+
       - name: Publicar dashboard no shinyapps.io
         run: |
           poetry run rsconnect add --account '${{ env.USER }}' --name '${{ env.USER }}' --token '${{ env.TOKEN }}' --secret '${{ env.SECRET }}'
-          poetry run rsconnect remove --all  
-          poetry run rsconnect deploy shiny projeto1 --title projeto1 --new --python 3.10
+          poetry run rsconnect deploy shiny projeto1 --title projeto1 --new --python 3.10 --include projeto1/dados_tratados.csv
 
       - name: Commit & Push
         uses: stefanzweifel/git-auto-commit-action@v4
