@@ -1,0 +1,50 @@
+on:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: '0 0 * * *'
+
+name: Fluxo de Automatização
+
+jobs:
+  MeuRobo:
+    runs-on: ubuntu-22.04
+
+    env:
+      USER: ${{ secrets.RSCONNECT_USER }}
+      TOKEN: ${{ secrets.RSCONNECT_TOKEN }}
+      SECRET: ${{ secrets.RSCONNECT_SECRET }}
+
+    steps:
+      - name: Clonar o repositório
+        uses: actions/checkout@v3
+
+      - name: Instalar o Python (compatível com shinyapps.io)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar o Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 2.1.2
+
+      - name: Configurar Poetry para ambiente local e instalar dependências
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry lock                            # 👈 ESTA LINHA FOI ADICIONADA
+          poetry install --no-root
+
+      - name: Rodar ETL
+        run: |
+          poetry run python projeto1/Python/etl.py
+
+      - name: Publicar dashboard no shinyapps.io
+        run: |
+          poetry run rsconnect add --account '${{ env.USER }}' --name '${{ env.USER }}' --token '${{ env.TOKEN }}' --secret '${{ env.SECRET }}'
+          poetry run rsconnect deploy shiny projeto1 --title projeto1 --new
+
+      - name: Commit & Push
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Atualização de dados e deploy automático
